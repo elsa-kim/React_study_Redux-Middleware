@@ -6,8 +6,13 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import rootReducer from "./modules";
+import loggerMiddleware from "./lib/loggerMiddleware";
+import { applyMiddleware } from "redux";
+import { createLogger } from "redux-logger";
+import ReduxThunk from "redux-thunk";
 
-const store = legacy_createStore(rootReducer);
+const logger = createLogger();
+const store = legacy_createStore(rootReducer, applyMiddleware(logger, ReduxThunk));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
