@@ -1,18 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { legacy_createStore } from "redux";
+import { legacy_createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import rootReducer from "./modules";
-import loggerMiddleware from "./lib/loggerMiddleware";
-import { applyMiddleware } from "redux";
+import rootReducer, { rootSaga } from "./modules";
+// import loggerMiddleware from "./lib/loggerMiddleware";
 import { createLogger } from "redux-logger";
 import ReduxThunk from "redux-thunk";
+import createSagaMiddleware from "@redux-saga/core";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 const logger = createLogger();
-const store = legacy_createStore(rootReducer, applyMiddleware(logger, ReduxThunk));
+const sagaMiddleware = createSagaMiddleware();
+const store = legacy_createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, ReduxThunk, sagaMiddleware)));
+sagaMiddleware.run(rootSaga);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
